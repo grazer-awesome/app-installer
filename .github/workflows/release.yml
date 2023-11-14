@@ -1,4 +1,4 @@
-name: GitHub App Setup
+name: App Workflow
 
 on:
   push:
@@ -6,25 +6,21 @@ on:
       - main
 
 jobs:
-  setup:
+  app-job:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out code
+    - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install and configure necessary tools
-      run: |
-        # Install any necessary tools or dependencies here
-      env:
-        GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID }}
-        GITHUB_APP_INSTALLATION_ID: ${{ secrets.GITHUB_APP_INSTALLATION_ID }}
-        GITHUB_APP_PEM: ${{ secrets.GITHUB_APP_PEM }}
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '11'
 
-    - name: Deploy or configure your app
-      run: |
-        # Use the secrets and information to set up your GitHub App, e.g., configure webhooks, deploy a server, etc.
-      env:
-        GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID }}
-        GITHUB_APP_INSTALLATION_ID: ${{ secrets.GITHUB_APP_INSTALLATION_ID }}
-        GITHUB_APP_PEM: ${{ secrets.GITHUB_APP_PEM }}
+    - name: Install Dependencies
+      run: mvn -B install --file pom.xml
+
+    - name: Run Tests
+      run: mvn test --file pom.xml
