@@ -1,0 +1,22 @@
+name: Create GitHub App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  create-github-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create GitHub App
+        uses: peter-evans/create-pull-request@v3.7.0
+        with:
+          commit-message: 'Create GitHub App'
+          title: 'Create GitHub App'
+          body: 'This pull request creates a new GitHub App.'
+          branch: 'create-github-app'
+          path: '.'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          labels: 'read-only'
