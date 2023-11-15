@@ -1,22 +1,32 @@
 name: Create GitHub App
 
 on:
-  push:
-    branches: [ main ]
-
+  workflow_dispatch:
+  
 jobs:
   create-github-app:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Create GitHub App
-        uses: peter-evans/create-pull-request@v3.7.0
-        with:
-          commit-message: 'Create GitHub App'
-          title: 'Create GitHub App'
-          body: 'This pull request creates a new GitHub App.'
-          branch: 'create-github-app'
-          path: '.'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          labels: 'read-only'
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+
+    - name: Install required packages
+      run: npm install -g @octokit/app-create
+
+    - name: Create GitHub App
+      id: create-github-app
+      run: |
+        gh-app-create \
+          --name "grazer-wins-read" \
+          --"just a demo app" \
+          # ... other options ...
+        echo "::set-output name=app-id::$(gh-app-create --json | jq -r '.id')"
+
+    - name: Store App ID
+      run: echo "APP_ID=${{ steps.create-github-app.outputs.app-id }}" >> $GITHUB_ENV
