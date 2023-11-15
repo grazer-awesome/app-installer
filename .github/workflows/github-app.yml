@@ -25,6 +25,7 @@ jobs:
         gh-app-create \
           --name "grazer-wins-read" \
           --"just a demo app" \
+          --org "grazer-awesome"
           # ... other options ...
         echo "::set-output name=app-id::$(gh-app-create --json | jq -r '.id')"
 
