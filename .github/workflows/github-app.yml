@@ -17,6 +17,6 @@ jobs:
           title: 'Create GitHub App'
           body: 'This pull request creates a new GitHub App.'
           branch: 'create-github-app'
-          path: '/app-installer/.github/workflows/.github-app.yml'
+          path: '.'
           token: ${{ secrets.GITHUB_TOKEN }}
           labels: 'read-only'
