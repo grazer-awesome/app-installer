@@ -7,30 +7,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout your repository
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    # Set up Chrome and ChromeDriver
-    - name: Install Chrome
+    - name: Install ChromeDriver
       run: |
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable
 
-    - name: Install ChromeDriver
-      run: |
-        CHROME_VERSION=$(google-chrome --version | grep -oE "[0-9]+.[0-9]+.[0-9]+")
+        # Get the installed Chrome version
+        CHROME_VERSION=$(google-chrome --version | sed -E 's/Google Chrome ([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+        echo "Detected Chrome version: $CHROME_VERSION"
+
+        # Get the corresponding ChromeDriver version
         CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+        echo "Matching ChromeDriver version: $CHROMEDRIVER_VERSION"
+
+        # Download and install ChromeDriver
         curl -L -O "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
         unzip chromedriver_linux64.zip
         sudo mv chromedriver /usr/bin/chromedriver
         sudo chmod +x /usr/bin/chromedriver
-
-    # Run your Selenium script
-    - name: Run Selenium Script
-      env:
-        GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
-        GITHUB_PASSWORD: ${{ secrets.GITHUB_PASSWORD }}
-      run: |
-        # Execute your Selenium script here. For example:
-        python3 path/to/your/selenium-script.py
