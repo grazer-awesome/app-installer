@@ -15,12 +15,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable
 
-        # Get the installed Chrome version
-        CHROME_VERSION=$(google-chrome --version | sed -E 's/Google Chrome ([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
-        echo "Detected Chrome version: $CHROME_VERSION"
+        # Get the major version of installed Chrome
+        CHROME_MAJOR_VERSION=$(google-chrome --version | sed -E 's/Google Chrome ([0-9]+).*/\1/')
+        echo "Detected Chrome major version: $CHROME_MAJOR_VERSION"
 
         # Get the corresponding ChromeDriver version
-        CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+        CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_MAJOR_VERSION")
         echo "Matching ChromeDriver version: $CHROMEDRIVER_VERSION"
 
         # Download and install ChromeDriver
