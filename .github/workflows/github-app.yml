@@ -1,19 +1,23 @@
-name: github-app
+name: GitHub Web Automation
 
 on: [push]
 
 jobs:
-  test:
+  automate-github-ui:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
 
+    steps:
+    # Checkout your repository
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    # Set up Chrome and ChromeDriver
     - name: Install Chrome
       run: |
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable
 
-    - name: Install Chrome WebDriver
+    - name: Install ChromeDriver
       run: |
         CHROME_VERSION=$(google-chrome --version | grep -oE "[0-9]+.[0-9]+.[0-9]+")
         CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
@@ -22,7 +26,11 @@ jobs:
         sudo mv chromedriver /usr/bin/chromedriver
         sudo chmod +x /usr/bin/chromedriver
 
-    # Optional: Add steps to run your tests
-    - name: Run Tests
+    # Run your Selenium script
+    - name: Run Selenium Script
+      env:
+        GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+        GITHUB_PASSWORD: ${{ secrets.GITHUB_PASSWORD }}
       run: |
-        # Your test command here
+        # Execute your Selenium script here. For example:
+        python3 path/to/your/selenium-script.py
